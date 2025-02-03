@@ -17,7 +17,7 @@ from impacket.examples.utils import parse_target
 from impacket.dcerpc.v5 import even, transport
 from impacket.dcerpc.v5.rpcrt import RPC_C_AUTHN_GSS_NEGOTIATE, RPC_C_AUTHN_LEVEL_PKT_PRIVACY
 
-
+EVENTLOG_SEQUENTIAL_READ = 0x00000001
 EVENTLOG_SEEK_READ = 0x00000002
 EVENTLOG_FORWARDS_READ = 0x00000004
 MAX_BATCH_BUFF = 0x7ffff
@@ -300,7 +300,9 @@ class MsEvenHandler:
             response = even.hElfrReadELW(
                 dce=dce,
                 logHandle=hLogHandle,
-                readFlags=EVENTLOG_SEEK_READ | EVENTLOG_FORWARDS_READ,
+#                readFlags=EVENTLOG_SEEK_READ | EVENTLOG_FORWARDS_READ,
+#                MS KB177199: https://mskb.pkisolutions.com/kb/177199
+                readFlags=EVENTLOG_SEQUENTIAL_READ,
                 recordOffset=record_offset,
                 numberOfBytesToRead=MAX_BATCH_BUFF
             )
